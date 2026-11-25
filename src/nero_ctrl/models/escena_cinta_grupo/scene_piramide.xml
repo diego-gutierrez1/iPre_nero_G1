@@ -1,0 +1,76 @@
+<mujoco model="nero_piramide_scene">
+  <include file="nero.xml"/>
+
+  <statistic center="-0.25 0 0.12" extent="0.45"/>
+
+  <visual>
+    <headlight diffuse="0.65 0.65 0.65" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="130" elevation="-24"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <material name="mat_mesa" rgba="0.22 0.24 0.27 1" specular="0.1" shininess="0.15"/>
+    <material name="mat_zona_piramide" rgba="0.16 0.45 0.30 1" specular="0.05" shininess="0.1"/>
+    <material name="mat_zona_acopio" rgba="0.28 0.31 0.36 1" specular="0.05" shininess="0.1"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.6" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+
+    <!-- Mesa de trabajo con superficie exacta a Z = 0.064 m (misma cota que la cinta) -->
+    <body name="mesa_trabajo" pos="-0.30 0 0">
+      <geom name="tablero_mesa" type="box" size="0.14 0.26 0.032" pos="0 0 0.032"
+            material="mat_mesa" friction="1.8 0.05 0.005" condim="4"/>
+      <!-- Guías visuales (sin colisión) para zona de pirámide y acopio -->
+      <geom name="marca_piramide" type="box" size="0.075 0.035 0.0005" pos="0 0 0.0642"
+            material="mat_zona_piramide" contype="0" conaffinity="0"/>
+      <geom name="marca_acopio_izq" type="box" size="0.085 0.035 0.0005" pos="0 -0.16 0.0642"
+            material="mat_zona_acopio" contype="0" conaffinity="0"/>
+      <geom name="marca_acopio_der" type="box" size="0.085 0.035 0.0005" pos="0  0.16 0.0642"
+            material="mat_zona_acopio" contype="0" conaffinity="0"/>
+    </body>
+
+    <!-- 6 cubos libres (6 GDL) de 4 cm (lado = 0.04 m, centro en Z = 0.084 m) -->
+    <!-- Piso 1 (base de 3 cubos - color naranja) -->
+    <body name="cubo_1" pos="-0.24 -0.16 0.084">
+      <freejoint name="cubo_1_free"/>
+      <geom name="cubo_1_geom" type="box" size="0.02 0.02 0.02" rgba="0.95 0.45 0.10 1"
+            mass="0.05" friction="2.5 0.1 0.01" condim="4"/>
+    </body>
+    <body name="cubo_2" pos="-0.30 -0.16 0.084">
+      <freejoint name="cubo_2_free"/>
+      <geom name="cubo_2_geom" type="box" size="0.02 0.02 0.02" rgba="0.95 0.55 0.15 1"
+            mass="0.05" friction="2.5 0.1 0.01" condim="4"/>
+    </body>
+    <body name="cubo_3" pos="-0.36 -0.16 0.084">
+      <freejoint name="cubo_3_free"/>
+      <geom name="cubo_3_geom" type="box" size="0.02 0.02 0.02" rgba="0.95 0.35 0.10 1"
+            mass="0.05" friction="2.5 0.1 0.01" condim="4"/>
+    </body>
+
+    <!-- Piso 2 (2 cubos intermedios - color cian) -->
+    <body name="cubo_4" pos="-0.24 0.16 0.084">
+      <freejoint name="cubo_4_free"/>
+      <geom name="cubo_4_geom" type="box" size="0.02 0.02 0.02" rgba="0.15 0.72 0.85 1"
+            mass="0.05" friction="2.5 0.1 0.01" condim="4"/>
+    </body>
+    <body name="cubo_5" pos="-0.30 0.16 0.084">
+      <freejoint name="cubo_5_free"/>
+      <geom name="cubo_5_geom" type="box" size="0.02 0.02 0.02" rgba="0.10 0.58 0.80 1"
+            mass="0.05" friction="2.5 0.1 0.01" condim="4"/>
+    </body>
+
+    <!-- Piso 3 (punta - 1 cubo color dorado) -->
+    <body name="cubo_6" pos="-0.36 0.16 0.084">
+      <freejoint name="cubo_6_free"/>
+      <geom name="cubo_6_geom" type="box" size="0.02 0.02 0.02" rgba="0.95 0.82 0.15 1"
+            mass="0.05" friction="2.5 0.1 0.01" condim="4"/>
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,50 @@
+<mujoco model="nero_evasion_cinta_scene">
+  <include file="nero.xml"/>
+  <include file="cinta.xml"/>
+
+  <statistic center="-0.20 0 0.12" extent="0.45"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+
+    <!-- Dos cubos de 4 cm espaciados 34 cm entre sí sobre la cinta (X = -0.28, Z = 0.084) -->
+    <!-- Rango [-0.34, +0.34] (68 cm de recorrido) para flujo continuo con --loop-cubes -->
+    <body name="obs_cube_1" pos="-0.28 0.0 0.084">
+      <joint name="cube1_joint" type="slide" axis="0 1 0" damping="0.0" range="-0.34 0.34"/>
+      <geom name="obs_cube_1_geom" type="box" size="0.02 0.02 0.02" rgba="1.0 0.38 0.10 1.0"
+            mass="0.05" friction="1.0 0.05 0.005" condim="4"/>
+    </body>
+
+    <body name="obs_cube_2" pos="-0.28 0.0 0.084">
+      <joint name="cube2_joint" type="slide" axis="0 1 0" damping="0.0" range="-0.34 0.34"/>
+      <geom name="obs_cube_2_geom" type="box" size="0.02 0.02 0.02" rgba="0.18 0.80 0.35 1.0"
+            mass="0.05" friction="1.0 0.05 0.005" condim="4"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <velocity name="cube1_motor" joint="cube1_joint" kv="50"/>
+    <velocity name="cube2_motor" joint="cube2_joint" kv="50"/>
+  </actuator>
+
+  <keyframe>
+    <!-- Brazo en home + 2 cubos espaciados 34 cm entre sí (permite bajar y volver a evadir) -->
+    <key name="scene_start"
+         qpos="0 -0.4 0 2.0 0 0 0 0 0 -0.32 0.02"
+         ctrl="0 -0.4 0 2.0 0 0 0 0 0.06 0.06"/>
+  </keyframe>
+</mujoco>
